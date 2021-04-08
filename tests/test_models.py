@@ -23,9 +23,9 @@ def test_value_constructor():
     assert (v.length, v.inherited, v.vtype) == (5, '', 'str')
     v = Value(10)
     assert v.length == 10
-    assert repr(v) == v.repr
+    assert repr(v) == '"'+v.repr+'"'
     v = Value(10, inherited='value')
-    assert repr(v) == 'value'
+    assert repr(v) == '"value"'
 
     with pytest.raises(ValueError) as info:
         v = Value(vtype='long')
