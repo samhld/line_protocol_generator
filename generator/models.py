@@ -63,6 +63,10 @@ class Value:
             return val
 
     def __repr__(self):
+        if self.vtype == 'int':
+            return str(self.repr)+'i'
+        elif self.vtype == 'str':
+            return '"'+self.repr+'"'
         return str(self.repr)+'i' if self.vtype == 'int' else str(self.repr)
 
 
@@ -92,7 +96,7 @@ class Timestamp:
         return str(self.repr)
 
 class Measurement:
-    pass
+    pass # Currently generated at runtime of script so need for further functionality for now
 
 class Tagset:
     def __init__(self, tags):
@@ -106,7 +110,15 @@ class Tagset:
         return repr(self.repr)
 
 class Fieldset:
-    pass
+    def __init__(self, fields):
+        self.fields = fields
+        self.repr = self._generate()
+
+    def _generate(self):
+        return ''.join([f"{field}," for field in self.fields])
+
+    def __repr__(self):
+        return repr(self.repr)[:-1]
 
 class Line:
     def __init__(self, measurement: Measurement=None, 

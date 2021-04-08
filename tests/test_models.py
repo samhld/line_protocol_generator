@@ -1,5 +1,6 @@
 import pytest
-from generator.models import Key,Value,Tag,Field,Tagset
+import re
+from generator.models import Key,Value,Tag,Field,Tagset,Fieldset
 
 def create_test_line(**kwargs):
     tag_keys = [Key(length=kwargs["tag_key_length"], inherited=kwargs["inherited"]) for key in keys]
@@ -66,6 +67,46 @@ def test_multi_tag_tagset():
     tagset = Tagset(tags)
     assert tagset.tags[0] != tagset.tags[1]
     assert len(tagset.tags) == num_tags
+    assert repr(tagset)
+
+def test_only_ints_fieldset():
+    int_fields = 5
+    fields = []
+    for t in range(int_fields):
+        fields.append(Field(key=Key(isfield=True))) # Field() defaults `vtype` to 'int'
+    fieldset = Fieldset(fields)
+    assert fieldset.fields[0] != fieldset.fields[1]
+    assert re.search("tag_", repr(fieldset)) == None
+    assert len(re.findall(",", repr(fieldset))) == int_fields
+
+def test_mixed_types_fieldset():
+    int_fields, float_fields, str_fields, bool_fields = 1, 2, 1, 1
+    fields = []
+    key = Key(isfield=True)
+    for i in range(int_fields):
+        key = Key(isfield=True)
+        field = Field(key=key)
+        fields.append(field)
+    for f in range(float_fields):
+        key = Key(isfield=True)
+        val = Value(vtype='float')
+        field = Field(key, val)
+        fields.append(field)
+    for s in range(str_fields):
+        key = Key(isfield=True)
+        val = Value(vtype='str')
+        field = Field(key, val)
+        fields.append(field)
+    for b in range(bool_fields):
+        key = Key(isfield=True)
+        val = Value(vtype='bool')
+        field = Field(key, val)
+        fields.append(field)
+    
+    fieldset = Fieldset(fields)
+    assert len(re.findall(",", repr(fieldset))) == 5 # num fields defined
+
+
 
 
 
