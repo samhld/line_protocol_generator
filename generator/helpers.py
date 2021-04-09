@@ -2,11 +2,10 @@ import string
 import datetime
 import random
 
-letters = string.ascii_lowercase
-
 def create_string(num: int):
-    string = "".join(random.choice(letters) for i in range(num))
-    return string
+    letters = string.ascii_lowercase
+    s = "".join(random.choice(letters) for i in range(num))
+    return s
 
 def create_int(num: int):
     lower_bound = 10 ** (num - 1)
