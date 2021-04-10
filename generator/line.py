@@ -1,6 +1,6 @@
-import runconfig as cfg
-from sets import Tagset, Fieldset
-from primitives import Timestamp
+import generator.runconfig as cfg
+from generator.sets import Tagset, Fieldset
+from generator.primitives import Timestamp
 
 
 class Line:
@@ -20,21 +20,21 @@ class Line:
     def __str__(self):
         return f"{self.measurement}{self.tagset} {self.fieldset} {self.timestamp}" 
 
-
-def gen_line(measurement=None, tags=None, tagset=None, fields=None, fieldset=None, **kwargs):
-    
-    if fieldset and tagset:
-        line = Line(measurement=measurement, tagset=Tagset(**kwargs),
-                    fieldset=Fieldset(**kwargs), timestamp=time_precision)
-        return line
-    elif tags and fields:
-        tagset = Tagset(tags)
-        fieldset = Fieldset(fields)
-        line = Line(measurement=measurement, tagset=Tagset(**kwargs),
-                    fieldset=Fieldset(**kwargs), timestamp=time_precision)
-        return line
-    else:
-        return Line()
+    @classmethod
+    def gen_line(measurement=None, tags=None, tagset=None, fields=None, fieldset=None, **kwargs):
+        
+        if fieldset and tagset:
+            line = Line(measurement=measurement, tagset=Tagset(**kwargs),
+                        fieldset=Fieldset(**kwargs), timestamp=time_precision)
+            return line
+        elif tags and fields:
+            tagset = Tagset(tags)
+            fieldset = Fieldset(fields)
+            line = Line(measurement=measurement, tagset=Tagset(**kwargs),
+                        fieldset=Fieldset(**kwargs), timestamp=time_precision)
+            return line
+        else:
+            return Line()
 
 
 
