@@ -1,4 +1,4 @@
-from generator.helpers import *
+from helpers import *
 
 
 class Key:
@@ -11,9 +11,14 @@ class Key:
         """
         self.length = length
         self.isfield = isfield
-        self.text = self._gen_text()
         
-    def _gen_text(self):
+    # def _gen_text(self):
+    #     if self.isfield:
+    #         return create_string(self.length)
+    #     else:
+    #         return "tag_"+create_string(self.length)[:-4]
+
+    def __str__(self):
         if self.isfield:
             return create_string(self.length)
         else:
@@ -29,9 +34,8 @@ class Value:
         """
         self.length = length
         self.vtype = vtype
-        self.text = str(self._gen_text())
 
-    def _gen_text(self):
+    def __str__(self):
         if self.vtype == 'str':
             val = '"'+create_string(self.length)+'"'
         elif self.vtype == 'int':
@@ -43,24 +47,30 @@ class Value:
         else:
             raise ValueError(f"{self.vtype} is not a supported type")
                     
-        return val
+        return str(val)
 
 class Tag:
     def __init__(self, key=None, val=None):
         self.key = key or Key()
         self.val = val or Value()
-        self.text = f"{self.key.text}={self.val.text}"
+
+    def __str__(self):
+        return f"{self.key}={self.val}"
 
 class Field:
     def __init__(self, key=None, val=None):
-        self.key = key or Key()
+        self.key = key or Key(isfield=True)
         self.val = val or Value(vtype='int')
-        self.text = f"{self.key.text}={self.val.text}"
+    
+    def __str__(self):
+        return f"{self.key}={self.val}"
     
 class Timestamp:
     def __init__(self, precision: str='s'):
         self.precision = precision
-        self.text = str(create_timestamp(self.precision))
+    
+    def __str__(self):
+        return str(create_timestamp(self.precision))
 
 class Measurement:
     pass # Currently generated at runtime of script so need for further functionality for now
