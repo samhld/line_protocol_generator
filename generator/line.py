@@ -1,5 +1,6 @@
-from runconfig import *
-from generator.sets import Tagset, Fieldset
+import runconfig as cfg
+from sets import Tagset, Fieldset
+from primitives import Timestamp
 
 
 class Line:
@@ -8,15 +9,16 @@ class Line:
                        series_key=None, **kwargs):
 
         self.measurement = measurement
-        self.tags = tags
-        self.fields = fields
-        self.tagset = tagset or gen_tagset(tags)
+        # self.tags = tags
+        # self.fields = fields
+        self.tagset = tagset
         self.fieldset = fieldset
         self.timestamp = timestamp
-        self.text = _gen_text(gen_line(measurement=measurement, )) 
+        # self.text = _gen_text(gen_line(measurement=measurement, )) 
 
-    def _gen_text(self, line):
-        return f"{line.measurement}{line.tagset.text} {line.fieldset.text} {line.timestamp.text}" 
+    
+    def __str__(self):
+        return f"{self.measurement}{self.tagset} {self.fieldset} {self.timestamp}" 
 
 
 def gen_line(measurement=None, tags=None, tagset=None, fields=None, fieldset=None, **kwargs):
