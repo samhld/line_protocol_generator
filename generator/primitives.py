@@ -1,4 +1,4 @@
-from helpers import *
+from generator.helpers import *
 
 
 class Key:

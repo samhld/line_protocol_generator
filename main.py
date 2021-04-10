@@ -1,10 +1,15 @@
 import argparse
-from generator import models, helpers
+from generator import helpers, primitives
+from generator.line import Line
+from generator.sets import Tagset, Fieldset
+from generator.primitives import Key, Value, Timestamp, Tag, Field 
+import runconfig as cfg
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a batch of Line Protocol points of a specified shape")
     parser.add_argument('measurement', type=str)
+    parser.add_argument('--sample_interval', type=int, default=10)
     parser.add_argument('--batch_size', type=int, default=10)
     parser.add_argument('--num_tags', type=int, default=3)
     parser.add_argument('--int_fields', type=int, default=2)
@@ -26,7 +31,41 @@ if __name__ == "__main__":
 
     kwargs = vars(parser.parse_args())
 
+    int_fields = kwargs["int_fields"]
+    float_fields = kwargs["float_fields"]
+    str_fields = kwargs["str_fields"]
+    bool_fields = kwargs["bool_fields"]
+    total_fields = int_fields + float_fields + str_fields + bool_fields
+    num_lines = kwargs["batch_size"] or cfg.batch_size
+    meas = kwargs["measurement"] or cfg.measurement
+    precision = kwargs["time_precision"] or cfg.time_precision
+    interval = kwargs["sample_interval"] or cfg.sample_interval
+    num_tags = kwargs["num_tags" or cfg.num_tags]
+
     if kwargs["loop"]:
         if kwargs["keep_series_session"]:
+            # Create keys outside of loop
+            tagsets = [Tagset(num_tags=num_tags) for i in range(num_lines)]
+            fieldsets = [Fieldset() for i in range(num_lines)]
+            while True:
+                lines = []
+                timestamp = Timestamp(precision=precision)
+                for tset, fset in zip(tagsets, fieldsets):
+                    line = Line(measurement=meas, tagset=tset, fieldset=fset, timestamp=timestamp)
+                    lines.append(line)
 
-            batch = models.Batch(**kwargs)
+                print(lines)
+
+                time.sleep(interval)
+        # else:
+        #     while True:
+        #         lines = []
+        #         timestamp = Timestamp(precision=precision)
+        #         for i in range(num_lines):
+        #             line = Line(measurement=meas, Tagset(num_tags)
+
+            
+
+            # else:
+            #     # Create
+
