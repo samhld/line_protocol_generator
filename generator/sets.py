@@ -45,9 +45,9 @@ class Fieldset:
     def append(self, field):
         self.fields.append(field)
 
+    # Implement add_key and add_value so user can set field values to change across batches (more realistic simulation but generally not required)
     def add_key(self, key_len):
         pass
-
     def add_value(self, val_len):
         pass
 

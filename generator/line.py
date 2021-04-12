@@ -29,21 +29,20 @@ class Line:
         
         if not timestamp:
             timestamp = Timestamp(precision=kwargs["time_precision"])
-            print(f"timestamp top level: {timestamp}")
+
         if fieldset and tagset:
-            print(f"timestamp if fieldset: {timestamp}")
-            line = Line(measurement=measurement, tagset=Tagset(**kwargs),
-                        fieldset=Fieldset(**kwargs), timestamp=timestamp)
+            line = Line(measurement=measurement, tagset=tagset,
+                        fieldset=fieldset, timestamp=timestamp)
             return cls(line)
+
         elif tags and fields:
-            print(f"timestamp if tags: {timestamp}")
             tagset = Tagset(tags)
             fieldset = Fieldset(fields)
             line = Line(measurement=measurement, tagset=Tagset(**kwargs),
                         fieldset=Fieldset(**kwargs), timestamp=timestamp)
             return cls(line)
+
         else:
-            print(f"timestamp if nothing: {timestamp}")
             if kwargs["num_tags"]:
                 tset = Tagset()
                 for t in range(kwargs["num_tags"]):
@@ -67,13 +66,3 @@ class Line:
             line = Line(measurement=measurement, tagset=tset,
                         fieldset=fset, timestamp=timestamp)
             return cls(line)
-
-
-
-# def generate(self):
-#     lines = []
-#     if self.keep_series_key:
-#         for i in range(self.size):
-#             lines.append(_generate_line())
-#     else:
-#         pass
