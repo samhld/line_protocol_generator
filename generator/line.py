@@ -18,24 +18,32 @@ class Line:
 
     
     def __str__(self):
-        return f"{self.measurement}{self.tagset} {self.fieldset} {self.timestamp}" 
+
+        if self.timestamp:
+            return f"{self.measurement}{self.tagset or ''} {self.fieldset} {self.timestamp}"
+        else:
+            return f"{self.measurement}{self.tagset or ''} {self.fieldset}"
 
     @classmethod
     def gen_line(cls, measurement=None, timestamp=None, tagset=None, fieldset=None, tags=None, fields=None, **kwargs):
         
         if not timestamp:
             timestamp = Timestamp(precision=kwargs["time_precision"])
+            print(f"timestamp top level: {timestamp}")
         if fieldset and tagset:
+            print(f"timestamp if fieldset: {timestamp}")
             line = Line(measurement=measurement, tagset=Tagset(**kwargs),
                         fieldset=Fieldset(**kwargs), timestamp=timestamp)
             return cls(line)
         elif tags and fields:
+            print(f"timestamp if tags: {timestamp}")
             tagset = Tagset(tags)
             fieldset = Fieldset(fields)
             line = Line(measurement=measurement, tagset=Tagset(**kwargs),
                         fieldset=Fieldset(**kwargs), timestamp=timestamp)
             return cls(line)
         else:
+            print(f"timestamp if nothing: {timestamp}")
             if kwargs["num_tags"]:
                 tset = Tagset()
                 for t in range(kwargs["num_tags"]):

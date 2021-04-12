@@ -11,18 +11,16 @@ class Key:
         """
         self.length = length
         self.isfield = isfield
+        self.text = self._gen_text()
         
-    # def _gen_text(self):
-    #     if self.isfield:
-    #         return create_string(self.length)
-    #     else:
-    #         return "tag_"+create_string(self.length)[:-4]
-
-    def __str__(self):
+    def _gen_text(self):
         if self.isfield:
             return create_string(self.length)
         else:
             return "tag_"+create_string(self.length)[:-4]
+
+    def __str__(self):
+        return self.text
 
 class Value:
     def __init__(self, length=5, vtype='str'):
@@ -34,8 +32,9 @@ class Value:
         """
         self.length = length
         self.vtype = vtype
+        self.text = self._gen_text()
 
-    def __str__(self):
+    def _gen_text(self):
         if self.vtype == 'str':
             val = '"'+create_string(self.length)+'"'
         elif self.vtype == 'int':
@@ -44,10 +43,11 @@ class Value:
             val = round(random.uniform(10,99), self.length-2)
         elif self.vtype == 'bool':
             val = random.choice([True,False])
-        else:
-            raise ValueError(f"{self.vtype} is not a supported type")
-                    
-        return str(val)
+        
+        return val
+
+    def __str__(self):
+        return str(self.text)
 
 class Tag:
     def __init__(self, key=None, val=None):
