@@ -68,9 +68,13 @@ class Field:
 class Timestamp:
     def __init__(self, precision: str='s'):
         self.precision = precision
+        self.text = self._gen_text()
+
+    def _gen_text(self):
+        return create_timestamp(self.precision)
     
     def __str__(self):
-        return str(create_timestamp(self.precision))
+        return str(self.text)
 
 class Measurement:
     pass # Currently generated at runtime of script so need for further functionality for now

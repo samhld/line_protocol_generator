@@ -97,7 +97,7 @@ if __name__ == "__main__":
                 lines = []
                 timestamp = Timestamp(precision=precision)
                 for tset, fset in zip(tagsets, fieldsets):
-                    line = Line.gen_line(measurement=meas, tagset=tset, fieldset=fset, timestamp=timestamp)
+                    line = Line(measurement=meas, tagset=tset, fieldset=fset, timestamp=timestamp)
                     lines.append(line)
 
                 for line in lines:
@@ -109,7 +109,7 @@ if __name__ == "__main__":
                 lines = []
                 timestamp = Timestamp(precision=precision)
                 for i in range(num_lines):
-                    line = Line.gen_line(measurement=meas, tagset=create_tagset(), fieldset=create_fieldset(), timestamp=timestamp)
+                    line = Line(measurement=meas, tagset=create_tagset(), fieldset=create_fieldset(), timestamp=timestamp)
                     print(line)
 
                 for line in lines:
