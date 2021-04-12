@@ -1,9 +1,33 @@
 import argparse
+import time
 from generator import helpers, primitives
 from generator.line import Line
 from generator.sets import Tagset, Fieldset
 from generator.primitives import Key, Value, Timestamp, Tag, Field 
 import runconfig as cfg
+
+def create_fieldset():
+    fset = Fieldset()
+    if int_fields:
+        for i in range(int_fields):
+            fset.add_int(key_len=kwargs["field_key_length"], val_len=kwargs["int_value_length"])
+    if float_fields:
+        for i in range(float_fields):
+            fset.add_float(key_len=kwargs["field_key_length"], val_len=kwargs["float_value_length"])
+    if str_fields:
+        for i in range(str_fields):
+            fset.add_str(key_len=kwargs["field_key_length"], val_len=kwargs["str_value_length"])
+    if bool_fields:
+        for i in range(bool_fields):
+            fset.add_bool(key_len=kwargs["field_key_length"], val_len=kwargs["bool_value_length"])
+    
+    return fset
+
+def create_tagset():
+    tset = Tagset()
+    for t in range(num_tags):
+        tset.add_tag(key_len=kwargs["tag_key_length"], val_len=kwargs["tag_value_length"])
+    return tset
 
 
 if __name__ == "__main__":
@@ -45,8 +69,30 @@ if __name__ == "__main__":
     if kwargs["loop"]:
         if kwargs["keep_series_session"]:
             # Create keys outside of loop
-            tagsets = [Tagset(num_tags=num_tags) for i in range(num_lines)]
-            fieldsets = [Fieldset() for i in range(num_lines)]
+            tagsets, fieldsets = [], []
+            # lines = []
+            for i in range(num_lines):
+                if num_tags:
+                    tset = Tagset()
+                    for t in range(num_tags):
+                        tset.add_tag(key_len=kwargs["tag_key_length"], val_len=kwargs["tag_value_length"])
+                    tagsets.append(tset)
+
+                fset = Fieldset()
+                if int_fields:
+                    for i in range(int_fields):
+                        fset.add_int(key_len=kwargs["field_key_length"], val_len=kwargs["int_value_length"])
+                if float_fields:
+                    for i in range(float_fields):
+                        fset.add_float(key_len=kwargs["field_key_length"], val_len=kwargs["float_value_length"])
+                if str_fields:
+                    for i in range(str_fields):
+                        fset.add_str(key_len=kwargs["field_key_length"], val_len=kwargs["str_value_length"])
+                if bool_fields:
+                    for i in range(bool_fields):
+                        fset.add_bool(key_len=kwargs["field_key_length"], val_len=kwargs["bool_value_length"])
+                fieldsets.append(fset)
+            
             while True:
                 lines = []
                 timestamp = Timestamp(precision=precision)
@@ -54,17 +100,22 @@ if __name__ == "__main__":
                     line = Line(measurement=meas, tagset=tset, fieldset=fset, timestamp=timestamp)
                     lines.append(line)
 
-                print(lines)
+                for line in lines:
+                    print(line)
 
                 time.sleep(interval)
-        # else:
-        #     while True:
-        #         lines = []
-        #         timestamp = Timestamp(precision=precision)
-        #         for i in range(num_lines):
-        #             line = Line(measurement=meas, Tagset(num_tags)
+        else:
+            while True:
+                lines = []
+                timestamp = Timestamp(precision=precision)
+                for i in range(num_lines):
+                    line = Line(measurement=meas, tagset=create_tagset(), fieldset=create_fieldset(), timestamp=timestamp)
+                    print(line)
 
-            
+                for line in lines:
+                    print(line)
+
+                time.sleep(interval)
 
             # else:
             #     # Create

@@ -1,5 +1,6 @@
-from runconfig import *
+import generator.runconfig as cfg
 from generator.sets import Tagset, Fieldset
+from generator.primitives import Timestamp
 
 
 class Line:
@@ -8,38 +9,16 @@ class Line:
                        series_key=None, **kwargs):
 
         self.measurement = measurement
-        self.tags = tags
-        self.fields = fields
-        self.tagset = tagset or gen_tagset(tags)
+        # self.tags = tags
+        # self.fields = fields
+        self.tagset = tagset
         self.fieldset = fieldset
         self.timestamp = timestamp
-        self.text = _gen_text(gen_line(measurement=measurement, )) 
-
-    def _gen_text(self, line):
-        return f"{line.measurement}{line.tagset.text} {line.fieldset.text} {line.timestamp.text}" 
-
-
-def gen_line(measurement=None, tags=None, tagset=None, fields=None, fieldset=None, **kwargs):
+        # self.text = _gen_text(gen_line(measurement=measurement, )) 
     
-    if fieldset and tagset:
-        line = Line(measurement=measurement, tagset=Tagset(**kwargs),
-                    fieldset=Fieldset(**kwargs), timestamp=time_precision)
-        return line
-    elif tags and fields:
-        tagset = Tagset(tags)
-        fieldset = Fieldset(fields)
-        line = Line(measurement=measurement, tagset=Tagset(**kwargs),
-                    fieldset=Fieldset(**kwargs), timestamp=time_precision)
-        return line
-    else:
-        return Line()
+    def __str__(self):
 
-
-
-# def generate(self):
-#     lines = []
-#     if self.keep_series_key:
-#         for i in range(self.size):
-#             lines.append(_generate_line())
-#     else:
-#         pass
+        if self.timestamp:
+            return f"{self.measurement}{self.tagset or ''} {self.fieldset} {self.timestamp}"
+        else:
+            return f"{self.measurement}{self.tagset or ''} {self.fieldset}"

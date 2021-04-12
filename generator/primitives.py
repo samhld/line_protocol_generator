@@ -1,4 +1,4 @@
-from helpers import *
+from generator.helpers import *
 
 
 class Key:
@@ -11,18 +11,16 @@ class Key:
         """
         self.length = length
         self.isfield = isfield
+        self.text = self._gen_text()
         
-    # def _gen_text(self):
-    #     if self.isfield:
-    #         return create_string(self.length)
-    #     else:
-    #         return "tag_"+create_string(self.length)[:-4]
-
-    def __str__(self):
+    def _gen_text(self):
         if self.isfield:
             return create_string(self.length)
         else:
             return "tag_"+create_string(self.length)[:-4]
+
+    def __str__(self):
+        return self.text
 
 class Value:
     def __init__(self, length=5, vtype='str'):
@@ -34,8 +32,9 @@ class Value:
         """
         self.length = length
         self.vtype = vtype
+        self.text = self._gen_text()
 
-    def __str__(self):
+    def _gen_text(self):
         if self.vtype == 'str':
             val = '"'+create_string(self.length)+'"'
         elif self.vtype == 'int':
@@ -44,10 +43,11 @@ class Value:
             val = round(random.uniform(10,99), self.length-2)
         elif self.vtype == 'bool':
             val = random.choice([True,False])
-        else:
-            raise ValueError(f"{self.vtype} is not a supported type")
-                    
-        return str(val)
+        
+        return val
+
+    def __str__(self):
+        return str(self.text)
 
 class Tag:
     def __init__(self, key=None, val=None):
@@ -68,9 +68,13 @@ class Field:
 class Timestamp:
     def __init__(self, precision: str='s'):
         self.precision = precision
+        self.text = self._gen_text()
+
+    def _gen_text(self):
+        return create_timestamp(self.precision)
     
     def __str__(self):
-        return str(create_timestamp(self.precision))
+        return str(self.text)
 
 class Measurement:
     pass # Currently generated at runtime of script so need for further functionality for now

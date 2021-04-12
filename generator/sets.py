@@ -1,14 +1,14 @@
 
 import re
-import runconfig as cfg
-from primitives import *
+import generator.runconfig as cfg
+from generator.primitives import *
 
 class Tagset:
-    def __init__(self, tags=[], num_tags=0):
-        self.tags = tags
+    def __init__(self, tags=None, num_tags=0):
+        self.tags = tags or []
         # self.text = "".join([f",{tag.text}" for tag in self.tags])
-        self.keys = [tag.key for tag in tags]
-        self.values = [tag.val for tag in tags]
+        self.keys = [tag.key for tag in self.tags]
+        self.values = [tag.val for tag in self.tags]
 
     def append(self, tag):
         self.tags.append(tag)
@@ -26,12 +26,12 @@ class Tagset:
 
 
 class Fieldset:
-    def __init__(self, fields=[], field_key_length=8, field_value_length=10,
+    def __init__(self, fields=None, field_key_length=8, field_value_length=10,
                        int_fields=0, float_fields=0, str_fields=0, bool_fields=0, **kwargs):
-        self.fields = fields
+        self.fields = fields or []
         # self.text = ''.join([f"{field.text}," for field in self.fields])[:-1]
-        self.keys = [field.key for field in fields]
-        self.values = [field.val for field in fields]
+        self.keys = [field.key for field in self.fields]
+        self.values = [field.val for field in self.fields]
         self.int_fields = int_fields
         self.float_fields = float_fields
         self.str_fields = str_fields
@@ -44,6 +44,12 @@ class Fieldset:
 
     def append(self, field):
         self.fields.append(field)
+
+    # Implement add_key and add_value so user can set field values to change across batches (more realistic simulation but generally not required)
+    def add_key(self, key_len):
+        pass
+    def add_value(self, val_len):
+        pass
 
     def add_int(self, field: Field=None, key_len=cfg.field_key_length, val_len=cfg.int_value_length):
         if field:
